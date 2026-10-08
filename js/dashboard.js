@@ -1,4 +1,4 @@
-﻿import { apiGetAll } from './api.js';
+import { apiGetAll } from './api.js';
 import { resources } from './resources.js';
 import { escapeHtml, formatDate } from './ui.js';
 
