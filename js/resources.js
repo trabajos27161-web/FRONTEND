@@ -1,4 +1,4 @@
-﻿export const resources = {
+export const resources = {
   usuarios: { label:'Usuarios', singular:'usuario', endpoint:'/usuarios/', columns:['id','nombre','apellido','correo','idrol','estado'], search:['nombre','apellido','correo'], fields:[
     {name:'nombre',label:'Nombre',required:true,max:100},{name:'apellido',label:'Apellido',required:true,max:100},{name:'correo',label:'Correo electrónico',type:'email',required:true,max:150},{name:'password',label:'Contraseña',type:'password',required:true,min:10,max:255,createOnly:true},{name:'idrol',label:'Rol',type:'relation',relation:'rol',required:true},{name:'estado',label:'Estado',type:'boolean',default:true}
   ]},
