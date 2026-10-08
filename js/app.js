@@ -8,11 +8,13 @@ import { renderCrud } from './crud.js';
 import { escapeHtml, toast } from './ui.js';
 
 const body=document.body;
-const roleKey=body.dataset.role;
+const roleKey={admin:'admin',operador:'operator',tecnico:'technician'}[body.dataset.role];
 const roleId={admin:1,operator:2,technician:3}[roleKey];
 const guard={admin:requireAdmin,operator:requireOperator,technician:requireTechnician}[roleKey];
 const user=guard?.();
-if(!user) throw new Error('Acceso redirigido por el guard de sesión.');
+if(!user) {
+  // The guard already redirected to login.
+} else {
 const pageKey=body.dataset.page || 'dashboard';
 const menu={
   admin:[['Dashboard','/admin/index.html','◈','dashboard'],['Usuarios','/admin/usuarios.html','♙','usuarios'],['Roles','/admin/roles.html','⬡','rol'],['Módulos','/admin/modulos.html','▦','modulo'],['Permisos por rol','/admin/permisos.html','⚿','modulo_x_rol'],['Tipos de sensor','/admin/tipos-sensor.html','◉','tipo_sensor'],['Sensores','/admin/sensores.html','⌖','sensor'],['Departamentos','/admin/departamentos.html','▤','dpto'],['Locaciones','/admin/locaciones.html','⌂','locacion'],['Asignaciones','/admin/asignaciones.html','⇄','asignacion_sensor'],['Lecturas','/admin/lecturas.html','⌁','lectura']],
@@ -37,3 +39,4 @@ if(pageKey==='dashboard') renderDashboard(content,roleKey,user);
 else if(pageKey==='perfil') content.innerHTML=`<section class="page-intro"><div><span class="eyebrow">CUENTA PERSONAL</span><h1>Mi perfil</h1><p>Información de la sesión demo activa.</p></div></section><section class="content-card profile-card"><div class="profile-avatar">${escapeHtml((user.nombre||'E').slice(0,1).toUpperCase())}</div><div class="profile-details"><span class="eyebrow">DATOS DE USUARIO</span><h2>${escapeHtml(user.nombre)} ${escapeHtml(user.apellido)}</h2><dl><dt>Correo</dt><dd>${escapeHtml(user.correo)}</dd><dt>Rol</dt><dd>${escapeHtml(user.rol)}</dd><dt>ID de rol</dt><dd>${Number(user.idrol)}</dd><dt>Estado</dt><dd><span class="state-label good">Sesión demo activa</span></dd></dl><p class="data-note">Esta cuenta se mantiene en LocalStorage solo para demostrar la navegación. No corresponde a una sesión autenticada por FastAPI.</p></div></section>`;
 else if(resources[pageKey]) renderCrud(content,pageKey,roleKey);
 else { toast('La vista solicitada no está disponible.','error'); window.location.replace(dashboardForRole(roleId)); }
+}
